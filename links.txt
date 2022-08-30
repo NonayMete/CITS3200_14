@@ -1,0 +1,18 @@
+Add Firebase to Unity project
+https://firebase.google.com/docs/unity/setup#next_steps
+
+How to use pdfviewer to Display PDF from Firebase in Android Studio
+https://stackoverflow.com/questions/49382087/how-to-use-pdfviewer-to-display-pdf-from-firebase-in-android-studio
+-> https://github.com/barteksc/AndroidPdfViewer
+
+Getting started with Firebase in Unity (2019) - Firecasts
+https://www.youtube.com/watch?v=A6du3DUTIPI
+
+Getting started with Firebase Authentication in Unity - Firecasts
+https://www.youtube.com/watch?v=52yUcKLMKX0
+
+Firebase Unity playlist
+https://www.youtube.com/watch?v=A6du3DUTIPI&list=PLl-K7zZEsYLmnCN-bgE-OYPTfbDKM9t1y
+
+this is good video
+https://www.youtube.com/watch?v=8yRsDLIaAIQ&t=419s

@@ -1,0 +1,21 @@
+Searching in the app shows results based on tags that may be present for a file in the firebase database.
+When an option is selected the url/filepath will be read from the firebase database and sent to the loadContent() funciton.
+loadContent loads the file contents to the app.
+
+Database:
+File_1 -> url1 -> tags: geraldton, policy, essential...
+File_2 -> url2 -> tags: geraldton, emergency, evacuation...
+...
+File_17 -> url17 -> tags: pilbara, accomodation, booking
+
+E.g. if we search for geraldton we will have the following options:
+
+File_1
+File_2
+...
+
+Selecting File_1 reads url1 and sends it to loadContent()
+
+Content is loaded
+
+On the home screen / location screen we may have to hardcode certain options to choose
