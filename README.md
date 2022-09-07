@@ -1,4 +1,11 @@
 # CITS3200_14
+
+*Adding Firebase Auth*
+- Download SDK https://firebase.google.com/download/unity
+- In unity, Assets -> Import Package -> Custom Package
+- Select the file that is is in Firebase_unity_sdk -> dotnet4 -> FirebaseAuth.unitypackage
+- Import all files that come up
+
 WACRH Student Information App
 
 Unit Link: https://teaching.csse.uwa.edu.au/units/CITS3200/index.html
