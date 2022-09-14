@@ -1,25 +1,25 @@
 {
   "project_info": {
-    "project_number": "545391815076",
-    "project_id": "project-5952388709149239222",
-    "storage_bucket": "project-5952388709149239222.appspot.com"
+    "project_number": "861017566579",
+    "project_id": "testing-d04b8",
+    "storage_bucket": "testing-d04b8.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:545391815076:ios:95fe787b142dbbd0a53931",
+        "mobilesdk_app_id": "1:861017566579:ios:f456f5c918ef0b4e4fe906",
         "android_client_info": {
           "package_name": "com.DefaultCompany.com.unity.template.mobile2D"
         }
       },
       "oauth_client": [
         {
-          "client_id": "545391815076-6ru9m00a4m1rf00fe815eb77bnbirllq.apps.googleusercontent.com"
+          "client_id": "861017566579-sp3mp95p8l3hosjo0sc0gt2q0cigu87t.apps.googleusercontent.com"
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyB3jTGxz4i_8DGFvmrQDaY1-aCNseXo_T4"
+          "current_key": "AIzaSyBDIJrpyymVy4Cx2j80A3bcebDRU1zpx2Q"
         }
       ],
       "services": {
