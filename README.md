@@ -1,6 +1,13 @@
 # CITS3200_14
 WACRH Student Information App
 
+Adding Firebase Storage
+
+Download SDK https://firebase.google.com/download/unity
+In unity, Assets -> Import Package -> Custom Package
+Select the file that is is in Firebase_unity_sdk -> dotnet4 -> FirebaseStorage.unitypackage
+Import all files that come up
+
 Unit Link: https://teaching.csse.uwa.edu.au/units/CITS3200/index.html
 Project Link: https://teaching.csse.uwa.edu.au/units/CITS3200/project/offered/Projects_2022/Chant_WACRH_App.html
 
