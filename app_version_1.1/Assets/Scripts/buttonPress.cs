@@ -8,8 +8,7 @@ public class buttonPress : MonoBehaviour
     
     public void LoadSwitch()
     {
-        StaticVar.path = gameObject.transform.name + ".png";
-        Debug.Log(StaticVar.path);
+        StaticVar.path = gameObject.transform.name;
         SceneManager.LoadScene(1);
     }
 }

@@ -5,4 +5,6 @@ using UnityEngine;
 public class StaticVar : MonoBehaviour
 {
     public static string path = "";
+
+    public static bool policy = true;
 }

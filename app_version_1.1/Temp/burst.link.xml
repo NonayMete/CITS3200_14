@@ -1,0 +1,16 @@
+<linker>
+ <assembly fullname="UnityEngine.CoreModule">
+  <type fullname="Unity.Profiling.LowLevel.Unsafe.ProfilerUnsafeUtility">
+   <method name="BeginSample"/>
+  </type>
+  <type fullname="Unity.Profiling.LowLevel.Unsafe.ProfilerUnsafeUtility">
+   <method name="EndSample"/>
+  </type>
+  <type fullname="Unity.Collections.LowLevel.Unsafe.UnsafeUtility">
+   <method name="Free"/>
+  </type>
+  <type fullname="Unity.Collections.LowLevel.Unsafe.UnsafeUtility">
+   <method name="Malloc"/>
+  </type>
+ </assembly>
+</linker>
