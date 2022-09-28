@@ -1,20 +1,21 @@
 {
   "project_info": {
     "project_number": "861017566579",
+    "firebase_url": "https://testing-d04b8-default-rtdb.firebaseio.com",
     "project_id": "testing-d04b8",
     "storage_bucket": "testing-d04b8.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:861017566579:ios:f456f5c918ef0b4e4fe906",
+        "mobilesdk_app_id": "1:861017566579:ios:044c16b012b39e834fe906",
         "android_client_info": {
-          "package_name": "com.DefaultCompany.com.unity.template.mobile2D"
+          "package_name": "com.CITS3200Group14.FirebaseTest"
         }
       },
       "oauth_client": [
         {
-          "client_id": "861017566579-sp3mp95p8l3hosjo0sc0gt2q0cigu87t.apps.googleusercontent.com"
+          "client_id": "861017566579-agg4ebsdtqrsml17c80kqkdd9of6uk6g.apps.googleusercontent.com"
         }
       ],
       "api_key": [

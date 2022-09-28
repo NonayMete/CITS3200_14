@@ -3,9 +3,9 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>861017566579-sp3mp95p8l3hosjo0sc0gt2q0cigu87t.apps.googleusercontent.com</string>
+	<string>861017566579-agg4ebsdtqrsml17c80kqkdd9of6uk6g.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.861017566579-sp3mp95p8l3hosjo0sc0gt2q0cigu87t</string>
+	<string>com.googleusercontent.apps.861017566579-agg4ebsdtqrsml17c80kqkdd9of6uk6g</string>
 	<key>ANDROID_CLIENT_ID</key>
 	<string>861017566579-ak3fdfaf00rv7vjdd4uf7573te3nt1fm.apps.googleusercontent.com</string>
 	<key>API_KEY</key>
@@ -15,7 +15,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.DefaultCompany.com.unity.template.mobile2D</string>
+	<string>com.CITS3200Group14.FirebaseTest</string>
 	<key>PROJECT_ID</key>
 	<string>testing-d04b8</string>
 	<key>STORAGE_BUCKET</key>
@@ -31,6 +31,8 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:861017566579:ios:f456f5c918ef0b4e4fe906</string>
+	<string>1:861017566579:ios:044c16b012b39e834fe906</string>
+	<key>DATABASE_URL</key>
+	<string>https://testing-d04b8-default-rtdb.firebaseio.com</string>
 </dict>
 </plist>

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Firebase;
 using Firebase.Auth;
+using Firebase.Database;
 using TMPro;
 using UnityEngine.SceneManagement;
 
@@ -12,19 +13,28 @@ public class AuthManager : MonoBehaviour
     
     public FirebaseAuth auth;
     public FirebaseUser User;
+    public DatabaseReference DB;
     public DependencyStatus dependencyStatus;
     public static bool is_logged = false;
 
-    [Header("Register")]
+    [Header("Register Variables")]
     public TMP_InputField username;
     public TMP_InputField email;
     public TMP_InputField passwordr;
+    public TMP_InputField Mobile;
     public TMP_Text warningRegisterText;
+    public TMP_Dropdown Locations;
+    public TMP_Dropdown relationship;
+    [Header("Login Variables")]
     public TMP_Text warningLoginText;
-    public TMP_Text confirmLoginText;
     public TMP_Text welcome;
+    public TMP_Text Location_display;
+    public TMP_Text email_display;
+    public TMP_Text mobile_display;
+    public TMP_Text relationship_display;
     public TMP_InputField usernamel;
     public TMP_InputField passwordl;
+    
 
     void Awake()
     {
@@ -53,6 +63,7 @@ public class AuthManager : MonoBehaviour
         Debug.Log("Setting up Firebase Auth");
         //Set the authentication instance object
         auth = FirebaseAuth.DefaultInstance;
+        DB = FirebaseDatabase.DefaultInstance.RootReference;
     }
 
     private void clearLogin()
@@ -67,12 +78,11 @@ public class AuthManager : MonoBehaviour
         auth.SignOut();
         pscript.clear();
         pscript.Profile();
-        confirmLoginText.text = "";
         clearLogin();
     }
     public void RegisterButton()
     {
-        StartCoroutine(Register(email.text,passwordr.text,username.text));
+        StartCoroutine(Register(email.text,passwordr.text,username.text,Locations.options[Locations.value].text,Mobile.text,relationship.options[relationship.value].text));
     }
     private IEnumerator Login(string _email, string _password)
     {
@@ -111,25 +121,29 @@ public class AuthManager : MonoBehaviour
         }
         else
         {
-            //Logged In
-            is_logged = true;
             User = LoginTask.Result;
+            //Logged In
+            StartCoroutine(LoadData());
+            yield return new WaitForSeconds(1);
+            is_logged = true;
             warningLoginText.text = "";
-            confirmLoginText.text = "Logged In";
-            welcome.text = "Welcome "+ User.DisplayName;
             pscript.clear();
             pscript.Logged();
             
         }
     }
-    private IEnumerator Register(string _email, string _password, string _username)
+
+    private IEnumerator Register(string _email, string _password, string _username, string _location, string _phone, string _relationship)
     {
         if (_username == "")
         {
             //If the username field is blank show a warning
             warningRegisterText.text = "Missing Username";
         }
-        
+        else if(_phone == "")
+        {
+            warningRegisterText.text = "Missing Mobile";
+        }
         else 
         {
             //Call the Firebase auth signin function passing the email and password
@@ -192,14 +206,105 @@ public class AuthManager : MonoBehaviour
                     else
                     {
                         //Username set
-                    
+                        StartCoroutine(Database_Update(_username, _location, _phone,_email,_relationship));
                         pscript.clear();
                         pscript.Profile();
+                        
                         warningRegisterText.text = "";
+                        Mobile.text = "";
+                        username.text = "";
+                        email.text = "";
+                        passwordr.text = "";
                     }
                 }
             }
         }
+    }
+    private IEnumerator SetProfile(string _username)
+    {
+        UserProfile pf = new UserProfile {DisplayName = _username};
+        var Profile = User.UpdateUserProfileAsync(pf);
+        yield return new WaitUntil(predicate:()=>Profile.IsCompleted);
+        if (Profile.Exception!=null)
+        {
+            Debug.LogWarning(message: $"Could not create user profile {Profile.Exception}");
+        }
+        else
+        {
+            // Profile creating successful
+        }
+    }
+    private IEnumerator Database_Update(string _username, string _location, string _phone, string _email, string _relationship)
+    {
+        var DataBase = DB.Child("users").Child(User.UserId).Child("username").SetValueAsync(_username);
+        yield return new WaitUntil(predicate:()=>DataBase.IsCompleted);
+        if (DataBase.Exception!=null)
+        {
+            Debug.LogWarning(message:$"Could not register on database{DataBase.Exception}");
+        }
+        else
+        {
+            // Successfull
+        }
+        var DataBase2 = DB.Child("users").Child(User.UserId).Child("location").SetValueAsync(_location);
+        yield return new WaitUntil(predicate:()=>DataBase2.IsCompleted);
+        if (DataBase2.Exception!=null)
+        {
+            Debug.LogWarning(message:$"Could not register on database{DataBase2.Exception}");
+        }
+        else
+        {
+            // Successfull
+        }
+        var DataBase3 = DB.Child("users").Child(User.UserId).Child("phone").SetValueAsync(_phone);
+        yield return new WaitUntil(predicate:()=>DataBase3.IsCompleted);
+        if (DataBase3.Exception!=null)
+        {
+            Debug.LogWarning(message:$"Could not register on database{DataBase3.Exception}");
+        }
+        else
+        {
+            // Successfull
+        }
+        var DataBase4 = DB.Child("users").Child(User.UserId).Child("email").SetValueAsync(_email);
+        yield return new WaitUntil(predicate:()=>DataBase4.IsCompleted);
+        if (DataBase4.Exception!=null)
+        {
+            Debug.LogWarning(message:$"Could not register on database{DataBase4.Exception}");
+        }
+        else
+        {
+            // Successfull
+        }
+        var DataBase5 = DB.Child("users").Child(User.UserId).Child("relationship").SetValueAsync(_relationship);
+        yield return new WaitUntil(predicate:()=>DataBase5.IsCompleted);
+        if (DataBase5.Exception!=null)
+        {
+            Debug.LogWarning(message:$"Could not register on database{DataBase5.Exception}");
+        }
+        else
+        {
+            // Successfull
+        }
+
+    }
+    private IEnumerator LoadData()
+    {
+        var Data = DB.Child("users").Child(User.UserId).GetValueAsync();
+            yield return new WaitUntil(predicate: () => Data.IsCompleted);
+            if (Data.Exception !=null)
+            {
+                Debug.LogWarning(message: $"Failed {Data.Exception}");
+            }
+            else
+            {
+                DataSnapshot snapshot = Data.Result;
+                welcome.text = "Welcome " + snapshot.Child("username").Value.ToString();
+                Location_display.text = "Location: "+ snapshot.Child("location").Value.ToString();
+                email_display.text = "Email: "+ snapshot.Child("email").Value.ToString();
+                mobile_display.text = "Phone: "+snapshot.Child("phone").Value.ToString();
+                relationship_display.text = "Relationship to WACRH: " +snapshot.Child("relationship").Value.ToString();
+            }
     }
 
 }
