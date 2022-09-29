@@ -86,7 +86,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.adaptiveperformance": {
-      "version": "3.0.3",
+      "version": "4.0.1",
       "depth": 0,
       "source": "registry",
       "dependencies": {
@@ -105,7 +105,7 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.collab-proxy": {
-      "version": "1.17.1",
+      "version": "1.17.2",
       "depth": 0,
       "source": "registry",
       "dependencies": {
