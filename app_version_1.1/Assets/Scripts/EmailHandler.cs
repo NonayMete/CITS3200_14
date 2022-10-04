@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System;
+using System.IO;
 using System.Net;
 using System.Net.Mail;
 using System.Net.Security;
@@ -24,6 +25,11 @@ public class EmailHandler : MonoBehaviour
             mail.To.Add(recipientEmail.text);
             mail.Body = bodyMessage.text;
             mail.Subject = subjectLine.text;
+			
+			Attachment attachment = null;
+			attachment = new Attachment(EmailFileHandler.destinationPath);
+			mail.Attachments.Add(attachment);
+			
             smtpC.Port = 587;
             //Credentials for From address
             smtpC.Credentials =(System.Net.ICredentialsByHost) new System.Net.NetworkCredential("wacrhapptest@gmail.com", "yxfffkqosdkicftt");
