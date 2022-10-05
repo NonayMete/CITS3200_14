@@ -58,6 +58,20 @@ public class PanelSwitch : MonoBehaviour
         clear();
         Panels[6].SetActive(true);
     }
+    public void password_reset_on()
+    {
+        Panels[7].SetActive(true);
+    }
+    public void password_reset_off()
+    {
+        Panels[7].SetActive(false);
+    }
+    public void update_details()
+    {
+        clear();
+        Navibar.SetActive(false);
+        Panels[8].SetActive(true);
+    }
 
     
 }

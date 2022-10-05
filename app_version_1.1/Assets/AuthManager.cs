@@ -34,8 +34,10 @@ public class AuthManager : MonoBehaviour
     public TMP_Text relationship_display;
     public TMP_InputField usernamel;
     public TMP_InputField passwordl;
-    
-
+    [Header("Edit Details Variables")]
+    public TMP_Dropdown Locations_e;
+    public TMP_Dropdown relationship_e;
+    public TMP_InputField Mobile_e;
     void Awake()
     {
         //Check that all of the necessary dependencies for Firebase are present on the system
@@ -65,6 +67,24 @@ public class AuthManager : MonoBehaviour
         auth = FirebaseAuth.DefaultInstance;
         DB = FirebaseDatabase.DefaultInstance.RootReference;
     }
+    public void ResetPassButton()
+    {
+        string email = usernamel.text;
+        if (email != "") {
+        auth.SendPasswordResetEmailAsync(email).ContinueWith(task => {
+            if (task.IsCanceled) {
+            Debug.LogError("SendPasswordResetEmailAsync was canceled.");
+            return;
+            }
+            if (task.IsFaulted) {
+            Debug.LogError("SendPasswordResetEmailAsync encountered an error: " + task.Exception);
+            return;
+            }
+
+            Debug.Log("Password reset email sent successfully.");
+        });
+        }
+    }
 
     private void clearLogin()
     {
@@ -79,6 +99,15 @@ public class AuthManager : MonoBehaviour
         pscript.clear();
         pscript.Profile();
         clearLogin();
+    }
+    public void editDetailsButton()
+    {
+        StartCoroutine(editDetails(Locations_e.options[Locations_e.value].text,Mobile_e.text,relationship_e.options[relationship_e.value].text));
+        StartCoroutine(LoadData());
+        pscript.clear();
+        pscript.Profile();
+        Mobile_e.text = "";
+        
     }
     public void RegisterButton()
     {
@@ -306,5 +335,39 @@ public class AuthManager : MonoBehaviour
                 relationship_display.text = "Relationship to WACRH: " +snapshot.Child("relationship").Value.ToString();
             }
     }
+    private IEnumerator editDetails(string _location, string _phone, string _relationship)
+    {
+        var DataBase = DB.Child("users").Child(User.UserId).Child("phone").SetValueAsync(_phone);
+        yield return new WaitUntil(predicate:()=>DataBase.IsCompleted);
+        if (DataBase.Exception!=null)
+        {
+            Debug.LogWarning(message:$"Could not register on database{DataBase.Exception}");
+        }
+        else
+        {
+            // Successfull
+        }
+        var DataBase1 = DB.Child("users").Child(User.UserId).Child("location").SetValueAsync(_location);
+        yield return new WaitUntil(predicate:()=>DataBase.IsCompleted);
+        if (DataBase1.Exception!=null)
+        {
+            Debug.LogWarning(message:$"Could not register on database{DataBase1.Exception}");
+        }
+        else
+        {
+            // Successfull
+        }
+        var DataBase2 = DB.Child("users").Child(User.UserId).Child("relationship").SetValueAsync(_relationship);
+        yield return new WaitUntil(predicate:()=>DataBase.IsCompleted);
+        if (DataBase2.Exception!=null)
+        {
+            Debug.LogWarning(message:$"Could not register on database{DataBase2.Exception}");
+        }
+        else
+        {
+            // Successfull
+        }
+    }
+
 
 }
