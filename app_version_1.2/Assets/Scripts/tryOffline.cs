@@ -59,30 +59,33 @@ public class tryOffline : MonoBehaviour
         if (localFileName == "map") 
         {
             check = StaticVar.map;
-            StaticVar.map = true;
+            //StaticVar.map = true;
         }
         else if (localFileName == "emergency")
         {
             check = StaticVar.emergency;
-            StaticVar.map = true;
+            //StaticVar.map = true;
         }
         else if (localFileName == "announcement")
         {
             check = StaticVar.announcement;
-            StaticVar.map = true;
+            //StaticVar.map = true;
         }
         
-        if(Application.internetReachability == NetworkReachability.NotReachable || check == true)
+        Debug.Log("here >..> " + !AuthManager.is_logged);
+        if(Application.internetReachability == NetworkReachability.NotReachable || check == true || !AuthManager.is_logged)
         {
             localLoad();
         } 
         else // if first time tying to load
         {
             var dirPath = Application.persistentDataPath + "/" + localFileName;
-            if(!Directory.Exists(dirPath)) {    // create local directory if it doesnt exist
-                Directory.CreateDirectory(dirPath);
+            if(Directory.Exists(dirPath)) {    // delete local directory if it exists to update it
+                Directory.Delete(dirPath, true);
             }
+            Directory.CreateDirectory(dirPath);
             storage = FirebaseStorage.DefaultInstance;
+            Debug.Log("here ->" + "gs://testing-d04b8.appspot.com/"+StaticVar.location+"/"+localFileName);
             storageReference = storage.GetReferenceFromUrl("gs://testing-d04b8.appspot.com/"+StaticVar.location+"/"+localFileName);
 
             for (int i = 0; i < 20; i++)
@@ -109,7 +112,21 @@ public class tryOffline : MonoBehaviour
                     break;
                 }
             }
-            
+            if (localFileName == "map") 
+            {
+                //check = StaticVar.map;
+                StaticVar.map = true;
+            }
+            else if (localFileName == "emergency")
+            {
+                //check = StaticVar.emergency;
+                StaticVar.map = true;
+            }
+            else if (localFileName == "announcement")
+            {
+                //check = StaticVar.announcement;
+                StaticVar.map = true;
+            }
             localLoad();
         }
     }

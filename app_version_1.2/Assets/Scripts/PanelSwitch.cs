@@ -25,6 +25,7 @@ public class PanelSwitch : MonoBehaviour
         {
             Destroy(Parent.GetChild(i).gameObject);
         }
+        StaticVar.location = StaticVar.home;
         Logo.SetActive(true);
         Navibar.SetActive(true);
         Panels[0].SetActive(true);
@@ -32,6 +33,7 @@ public class PanelSwitch : MonoBehaviour
     public void Search()
     {
         clear();
+        StaticVar.location = "";
         Panels[1].SetActive(true);
     }
     public void Profile()
