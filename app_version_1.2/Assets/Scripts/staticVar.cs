@@ -7,6 +7,7 @@ public class StaticVar : MonoBehaviour
     public static string path = "";
 
     public static string location = "Milford";
+    public static string home = "";
 
     public static bool policy = true;
 

@@ -330,6 +330,7 @@ public class AuthManager : MonoBehaviour
                 DataSnapshot snapshot = Data.Result;
                 welcome.text = "Welcome " + snapshot.Child("username").Value.ToString();
                 Location_display.text = "Location: "+ snapshot.Child("location").Value.ToString();
+                StaticVar.home = snapshot.Child("location").Value.ToString();
                 email_display.text = "Email: "+ snapshot.Child("email").Value.ToString();
                 mobile_display.text = "Phone: "+snapshot.Child("phone").Value.ToString();
                 relationship_display.text = "Relationship to WACRH: " +snapshot.Child("relationship").Value.ToString();

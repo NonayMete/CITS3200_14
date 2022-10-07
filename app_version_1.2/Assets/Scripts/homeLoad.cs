@@ -15,19 +15,20 @@ public class homeLoad : MonoBehaviour
 {
     public Transform Parent;
     public GameObject initText;
+    public GameObject homeText;
 
     //text reading
     public TextAsset dictionaryTextFile;
     private string theWholeFileAsOneLongString;
-    public static List<folder> structure;
+    public static List<folder> structure = new List<folder>();
     public int numFolders;
+    List<string> locationsList = new List<string>();
 
 
     void Start()
     {
         //text reading
         theWholeFileAsOneLongString = dictionaryTextFile.text;
-        List<folder> structure = new List<folder>();
         List<string> subFolder = new List<string>();
         string[] eachline = theWholeFileAsOneLongString.Split("\n");
         int depth = 0;
@@ -44,7 +45,10 @@ public class homeLoad : MonoBehaviour
                 structure.Add(new folder());
                 structure[numFolders].subFolders = subFolder;
                 structure[numFolders].path = splitline[0];
+                locationsList.Add(splitline[0]);
+                //Debug.Log("locations - " + locationsList);
                 structure[numFolders].numSubFolders = numSubs;
+                numSubs = 0;
                 subFolder = new List<string>();
                 numFolders++;
             } else {
@@ -61,19 +65,45 @@ public class homeLoad : MonoBehaviour
                 Debug.Log("SubFolder name: " + sub);
             }
         }*/
+    }
 
-        // write to screen
-        List<GameObject> textList = new List<GameObject>();
-
-        int numFiles = structure[8].numSubFolders;
-
-        for (int i = 0; i < numFiles; i++)
+    public void homeFilesLoad()
+    {
+        // finding index
+        for(int i = Parent.childCount - 1; i >= 0; i--)
         {
-            textList.Add(Instantiate(initText));
-            TextMeshProUGUI mText = textList[i].GetComponent<TextMeshProUGUI>();
-            mText.text = structure[8].subFolders[i];
-            textList[i].transform.SetParent(Parent);
-            textList[i].transform.localScale = new Vector2(1, 1);
+            Destroy(Parent.GetChild(i).gameObject);
+        }
+
+        int index = locationsList.FindIndex(a => a.Contains(StaticVar.home));
+        Debug.Log("index - " + index);
+
+        if (index == 0) {
+            TextMeshProUGUI hText = homeText.GetComponent<TextMeshProUGUI>();
+            hText.text = "Not Logged In";
+
+            GameObject logInText = Instantiate(initText);
+            TextMeshProUGUI mText = logInText.GetComponent<TextMeshProUGUI>();
+            mText.text = "Please Log In to access files";
+            logInText.transform.SetParent(Parent);
+            logInText.transform.localScale = new Vector2(1, 1);
+        } else {
+            // write to screen
+            TextMeshProUGUI hText = homeText.GetComponent<TextMeshProUGUI>();
+            hText.text = StaticVar.home;
+
+            List<GameObject> textList = new List<GameObject>();
+
+            int numFiles = structure[index].numSubFolders;
+
+            for (int i = 0; i < numFiles; i++)
+            {
+                textList.Add(Instantiate(initText));
+                TextMeshProUGUI mText = textList[i].GetComponent<TextMeshProUGUI>();
+                mText.text = structure[index].subFolders[i];
+                textList[i].transform.SetParent(Parent);
+                textList[i].transform.localScale = new Vector2(1, 1);
+            }
         }
     }
 }
