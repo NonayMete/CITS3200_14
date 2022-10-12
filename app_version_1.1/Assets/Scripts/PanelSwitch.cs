@@ -7,6 +7,10 @@ public class PanelSwitch : MonoBehaviour
     public GameObject[] Panels;
     public GameObject Navibar;
 
+    void Start()
+    {
+        Panels[7].SetActive(false);
+    }
     public void clear()
     {
         for (int i = 0 ; i < Panels.Length;i++){

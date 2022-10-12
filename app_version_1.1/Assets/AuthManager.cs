@@ -15,6 +15,7 @@ public class AuthManager : MonoBehaviour
     public FirebaseUser User;
     public DatabaseReference DB;
     public DependencyStatus dependencyStatus;
+    public static string email_global; // used differentiate between resetting email / changing email(user already logged in)
     public static bool is_logged = false;
 
     [Header("Register Variables")]
@@ -38,6 +39,12 @@ public class AuthManager : MonoBehaviour
     public TMP_Dropdown Locations_e;
     public TMP_Dropdown relationship_e;
     public TMP_InputField Mobile_e;
+    [Header("Other Variables")]
+    public TMP_Dropdown location_dropdown;
+    public TMP_Dropdown relation_dropdown;
+    public TMP_Dropdown location_dropdown_edit;
+    public TMP_Dropdown relation_dropdown_edit;
+    
     void Awake()
     {
         //Check that all of the necessary dependencies for Firebase are present on the system
@@ -55,10 +62,75 @@ public class AuthManager : MonoBehaviour
             }
         });
     }
+    // IEnumerator Start()
+    // {
+    //     yield return new WaitForSeconds(1);
+    //     if (PlayerPrefs.GetInt("Logged") == 1)
+    //     {
+    //         StartCoroutine(Login(PlayerPrefs.GetString("email"), PlayerPrefs.GetString("password")));
+    //     }
+    // }
+    private IEnumerator dropdown_populate()
+    {
+        var Data = DB.Child("Locations").GetValueAsync();
+            yield return new WaitUntil(predicate: () => Data.IsCompleted);
+            if (Data.Exception !=null)
+            {
+                Debug.LogWarning(message: $"Failed {Data.Exception}");
+            }
+            else
+            {
+                location_dropdown.options.Clear();
+                location_dropdown_edit.options.Clear();
+                List<string> items = new List<string>();
+                DataSnapshot snapshot = Data.Result;
+                foreach(DataSnapshot s in snapshot.Children){
+                    items.Add(s.Key);                
+                }   
+                foreach(var item in items)
+                {
+                    location_dropdown.options.Add(new TMP_Dropdown.OptionData(){text = item});
+                    location_dropdown_edit.options.Add(new TMP_Dropdown.OptionData(){text = item});
+                }
+            }
+        var Data2 = DB.Child("Relationships").GetValueAsync();
+            yield return new WaitUntil(predicate: () => Data2.IsCompleted);
+            if (Data2.Exception !=null)
+            {
+                Debug.LogWarning(message: $"Failed {Data2.Exception}");
+            }
+            else
+            {
+                relation_dropdown.options.Clear();
+                relation_dropdown_edit.options.Clear();
+                List<string> items = new List<string>();
+                DataSnapshot snapshot = Data2.Result;
+                foreach(DataSnapshot s in snapshot.Children){
+                    items.Add(s.Key);                
+                }   
+                foreach(var item in items)
+                {
+                    relation_dropdown.options.Add(new TMP_Dropdown.OptionData(){text = item});
+                    relation_dropdown_edit.options.Add(new TMP_Dropdown.OptionData(){text = item});
+                }
+            }
+                
+    }
+    public void createacct_Button()
+    {
+        StartCoroutine(dropdown_populate());
+    }
     public void LoginButton()
     {
         //Call the login coroutine passing the email and password
-        StartCoroutine(Login(usernamel.text, passwordl.text));
+        if (PlayerPrefs.GetInt("Logged") == 1)
+        {
+            StartCoroutine(Login(PlayerPrefs.GetString("email"), PlayerPrefs.GetString("password")));
+        }
+        else{
+            StartCoroutine(Login(usernamel.text, passwordl.text));
+        }
+        
     }
     private void InitializeFirebase()
     {
@@ -66,10 +138,38 @@ public class AuthManager : MonoBehaviour
         //Set the authentication instance object
         auth = FirebaseAuth.DefaultInstance;
         DB = FirebaseDatabase.DefaultInstance.RootReference;
+        auth.StateChanged += AuthStateChanged;
+        AuthStateChanged(this, null);
+        if (auth.CurrentUser!=null)
+        {
+            StartCoroutine(LoadData());
+            is_logged=true;
+            pscript.clear();
+            pscript.Logged();
+        }
+    }
+
+    // Track state changes of the auth object.
+    void AuthStateChanged(object sender, System.EventArgs eventArgs) {
+        if (auth.CurrentUser != User) {
+            bool signedIn = User != auth.CurrentUser && auth.CurrentUser != null;
+            if (!signedIn && User != null) {
+            Debug.Log("Signed out " + User.UserId);
+            }
+            User = auth.CurrentUser;
+            if (signedIn) {
+            Debug.Log("Signed in " + User.UserId);
+            }
+        }
     }
     public void ResetPassButton()
     {
+
         string email = usernamel.text;
+        if (email_global!= null)
+        {
+            email = email_global;
+        }
         if (email != "") {
         auth.SendPasswordResetEmailAsync(email).ContinueWith(task => {
             if (task.IsCanceled) {
@@ -94,6 +194,7 @@ public class AuthManager : MonoBehaviour
 
     public void logoutButton()
     {
+        PlayerPrefs.SetInt("Logged",0);
         is_logged=false;
         auth.SignOut();
         pscript.clear();
@@ -103,6 +204,7 @@ public class AuthManager : MonoBehaviour
     public void editDetailsButton()
     {
         StartCoroutine(editDetails(Locations_e.options[Locations_e.value].text,Mobile_e.text,relationship_e.options[relationship_e.value].text));
+        pscript.clear();
         StartCoroutine(LoadData());
         pscript.clear();
         pscript.Profile();
@@ -151,6 +253,9 @@ public class AuthManager : MonoBehaviour
         else
         {
             User = LoginTask.Result;
+            PlayerPrefs.SetString("email",_email);
+            PlayerPrefs.SetString("password",_password);
+            PlayerPrefs.SetInt("Logged",1);
             //Logged In
             StartCoroutine(LoadData());
             yield return new WaitForSeconds(1);
@@ -315,6 +420,16 @@ public class AuthManager : MonoBehaviour
         {
             // Successfull
         }
+        var DataBase6 = DB.Child("users").Child(User.UserId).Child("policy_read").SetValueAsync(false);
+        yield return new WaitUntil(predicate:()=>DataBase6.IsCompleted);
+        if (DataBase6.Exception!=null)
+        {
+            Debug.LogWarning(message:$"Could not register on database{DataBase6.Exception}");
+        }
+        else
+        {
+            // Successfull
+        }
 
     }
     private IEnumerator LoadData()
@@ -328,11 +443,12 @@ public class AuthManager : MonoBehaviour
             else
             {
                 DataSnapshot snapshot = Data.Result;
-                welcome.text = "Welcome " + snapshot.Child("username").Value.ToString();
+                welcome.text = "Welcome, " + snapshot.Child("username").Value.ToString();
                 Location_display.text = "Location: "+ snapshot.Child("location").Value.ToString();
                 email_display.text = "Email: "+ snapshot.Child("email").Value.ToString();
                 mobile_display.text = "Phone: "+snapshot.Child("phone").Value.ToString();
                 relationship_display.text = "Relationship to WACRH: " +snapshot.Child("relationship").Value.ToString();
+                email_global = snapshot.Child("email").Value.ToString();
             }
     }
     private IEnumerator editDetails(string _location, string _phone, string _relationship)
@@ -367,6 +483,11 @@ public class AuthManager : MonoBehaviour
         {
             // Successfull
         }
+
+    }
+    void OnDestroy() {
+        auth.StateChanged -= AuthStateChanged;
+        auth = null;
     }
 
 
