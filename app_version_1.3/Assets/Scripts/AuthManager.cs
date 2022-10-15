@@ -17,6 +17,7 @@ public class AuthManager : MonoBehaviour
     public DependencyStatus dependencyStatus;
     public static string email_global; // used differentiate between resetting email / changing email(user already logged in)
     public static bool is_logged = false;
+    public static string name_global;
 
     [Header("Register Variables")]
     public TMP_InputField username;
@@ -44,6 +45,7 @@ public class AuthManager : MonoBehaviour
     public TMP_Dropdown relation_dropdown;
     public TMP_Dropdown location_dropdown_edit;
     public TMP_Dropdown relation_dropdown_edit;
+    public TMP_Dropdown email_dropdown;
     
     void Awake()
     {
@@ -62,14 +64,32 @@ public class AuthManager : MonoBehaviour
             }
         });
     }
-    // IEnumerator Start()
-    // {
-    //     yield return new WaitForSeconds(1);
-    //     if (PlayerPrefs.GetInt("Logged") == 1)
-    //     {
-    //         StartCoroutine(Login(PlayerPrefs.GetString("email"), PlayerPrefs.GetString("password")));
-    //     }
-    // }
+    private IEnumerator dropdown_email()
+    {
+        var Data = DB.Child("Contact_Emails").GetValueAsync();
+            yield return new WaitUntil(predicate: () => Data.IsCompleted);
+            if (Data.Exception !=null)
+            {
+                Debug.LogWarning(message: $"Failed {Data.Exception}");
+            }
+            else
+            {
+                email_dropdown.options.Clear();
+                List<string> items = new List<string>();
+                DataSnapshot snapshot = Data.Result;
+                foreach(DataSnapshot s in snapshot.Children){
+                    items.Add(s.Value.ToString());                
+                }   
+                foreach(var item in items)
+                {
+                    email_dropdown.options.Add(new TMP_Dropdown.OptionData(){text = item});
+                }
+            }
+    }
+    public void dropdown_email_button()
+    {
+        StartCoroutine(dropdown_email());
+    }
     private IEnumerator dropdown_populate()
     {
         var Data = DB.Child("Locations").GetValueAsync();
@@ -450,6 +470,7 @@ public class AuthManager : MonoBehaviour
                 mobile_display.text = "Phone: "+snapshot.Child("phone").Value.ToString();
                 relationship_display.text = "Relationship to WACRH: " +snapshot.Child("relationship").Value.ToString();
                 email_global = snapshot.Child("email").Value.ToString();
+                name_global = snapshot.Child("username").Value.ToString();
             }
     }
     private IEnumerator editDetails(string _location, string _phone, string _relationship)
