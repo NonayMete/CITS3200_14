@@ -420,7 +420,7 @@ public class AuthManager : MonoBehaviour
         {
             // Successfull
         }
-        var DataBase6 = DB.Child("users").Child(User.UserId).Child("policy_read").SetValueAsync(false);
+        var DataBase6 = DB.Child("users").Child(User.UserId).Child("policy_read").SetValueAsync("");
         yield return new WaitUntil(predicate:()=>DataBase6.IsCompleted);
         if (DataBase6.Exception!=null)
         {
