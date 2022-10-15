@@ -11,7 +11,8 @@ public class buttonPress : MonoBehaviour
     {
         //StaticVar.location = "Milford"; //This should be changed when pressing search button but stay constant when at home
         StaticVar.path = StaticVar.location + "/" + gameObject.GetComponent<TextMeshProUGUI>().text.Replace(" ", "_");
-        Debug.Log("Path on firebase ... " + StaticVar.path);
+        //Debug.Log("Path on firebase ... " + StaticVar.path);
+        StaticVar.policy = false;
         //SceneManager.LoadScene(1);
     }
 }
